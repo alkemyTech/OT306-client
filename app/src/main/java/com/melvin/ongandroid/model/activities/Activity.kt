@@ -1,4 +1,4 @@
-package com.melvin.ongandroid.model
+package com.melvin.ongandroid.model.activities
 
 data class Activity(
     val description: String,

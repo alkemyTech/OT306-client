@@ -1,4 +1,4 @@
-package com.melvin.ongandroid.view
+package com.melvin.ongandroid.view.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,25 +8,31 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.melvin.ongandroid.databinding.FragmentHomeBinding
+import com.melvin.ongandroid.model.testimonial.OngRemoteDataSource
+import com.melvin.ongandroid.model.testimonial.OngRepository
 import com.melvin.ongandroid.view.adapter.TestimonialAdapter
 import com.melvin.ongandroid.viewmodel.TestimonialsViewModel
-import com.melvin.ongandroid.viewmodel.ViewModelFactory
-import com.melvin.ongandroid.view.adapter.HorizontalAdapter
+import com.melvin.ongandroid.view.adapter.ActivitiesAdapter
 import com.melvin.ongandroid.view.adapter.NewsAdapter
+import com.melvin.ongandroid.viewmodel.TestimonailViewModelFactory
 
 class HomeFragment : Fragment() {
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var testimonialAdapter: TestimonialAdapter
     private lateinit var newsAdapter: NewsAdapter
-    private val viewModel : TestimonialsViewModel by viewModels(
-        factoryProducer ={ ViewModelFactory())
-        
+    private lateinit var activitiesAdapter: ActivitiesAdapter
+
+    // viewModel instance with new viewModel factory
+    private val viewModel by viewModels<TestimonialsViewModel> {
+        TestimonailViewModelFactory(OngRepository(OngRemoteDataSource()))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,19 +40,30 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = HorizontalAdapter(listOf())
-        binding.rvWelcome.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvWelcome.adapter = adapter
-
-        
-        val adapternew = NewsAdapter(listOf())
-        binding.rvNews.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
-        binding.rvNews.adapter = adapternew
-
+        setupActivitiesRecyclerView()
         setUpTestimonialRecyclerView()
-        
+        setupNewsRecyclerView()
         subscribeUi()
+    }
 
+    // setup recyclerView News
+    private fun setupNewsRecyclerView() {
+        newsAdapter = NewsAdapter(emptyList())
+        binding.rvNews.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
+            adapter = newsAdapter
+        }
+    }
+
+    // setup recyclerView Activities
+    private fun setupActivitiesRecyclerView() {
+        activitiesAdapter = ActivitiesAdapter(emptyList())
+        binding.rvWelcome.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = activitiesAdapter
+        }
     }
 
     /*
@@ -66,8 +83,6 @@ class HomeFragment : Fragment() {
     Subscribe all adapters to observe viewModel LiveData
      */
     private fun subscribeUi() {
-
-
         subscribeTestimonialAdapter()
     }
 
@@ -75,11 +90,9 @@ class HomeFragment : Fragment() {
     Subscribe Testimonial adapter to observe viewModel LiveData
      */
     private fun subscribeTestimonialAdapter() {
-
         viewModel.testimonialsList.observe(viewLifecycleOwner){ testimonial ->
             if (testimonial != null){
                 testimonialAdapter.submitList(testimonial)
-
             }
             else{
                 //TODO : Show error general de la API

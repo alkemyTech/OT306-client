@@ -1,6 +1,5 @@
-package com.melvin.ongandroid.model
+package com.melvin.ongandroid.model.testimonial
 
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 

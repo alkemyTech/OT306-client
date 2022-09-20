@@ -1,4 +1,4 @@
-package com.melvin.ongandroid.model
+package com.melvin.ongandroid.model.testimonial
 
 import com.google.gson.annotations.SerializedName
 
