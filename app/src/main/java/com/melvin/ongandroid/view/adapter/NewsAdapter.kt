@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.melvin.ongandroid.databinding.NewListBinding
-import com.melvin.ongandroid.model.News
+import com.melvin.ongandroid.model.news.News
 
 class NewsAdapter(private val newslist: List<News>): RecyclerView.Adapter<NewsAdapter.Newsviewholder>(){
 

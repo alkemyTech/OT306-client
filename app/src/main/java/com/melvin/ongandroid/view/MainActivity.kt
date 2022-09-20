@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.melvin.ongandroid.R
 import com.melvin.ongandroid.databinding.ActivityMainBinding
+import com.melvin.ongandroid.view.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
