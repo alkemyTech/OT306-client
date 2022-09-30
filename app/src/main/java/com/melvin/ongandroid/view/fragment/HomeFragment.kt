@@ -1,11 +1,10 @@
-package com.melvin.ongandroid.view
+package com.melvin.ongandroid.view.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -18,6 +17,8 @@ import com.melvin.ongandroid.model.news.NewsRepository
 import com.melvin.ongandroid.model.news.NewsViewState
 import com.melvin.ongandroid.model.news.RetrofitClient
 import com.melvin.ongandroid.utils.AppConstants
+import com.melvin.ongandroid.utils.Extensions.gone
+import com.melvin.ongandroid.utils.Extensions.showToast
 import com.melvin.ongandroid.view.adapter.TestimonialAdapter
 import com.melvin.ongandroid.view.adapter.HorizontalAdapter
 import com.melvin.ongandroid.view.adapter.NewsAdapter
@@ -49,7 +50,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -73,8 +74,14 @@ class HomeFragment : Fragment() {
             if (activitiesList != null) {
                 adapter.activitiesList = activitiesList
                 adapter.notifyDataSetChanged()
+                val bundle = Bundle()
+                bundle.putString("eventLog", "slider_retrieve_success")
+                firebaseAnalytic.logEvent("slider_retrieve_success", bundle)
             } else {
-                Toast.makeText(context, "Incio - Error general ", Toast.LENGTH_SHORT).show()
+                showToast("Incio - Error general")
+                val bundle = Bundle()
+                bundle.putString("eventLog", "slider_retrieve_error")
+                firebaseAnalytic.logEvent("slider_retrieve_error", bundle)
             }
 
         }
@@ -101,7 +108,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    /** firebase analytics **/
+    // firebase analytics
     private fun logEvents() {
         //last_news_see_more_pressed': Al presionar la flecha "Ver más" en listado de "Últimas novedades"
         val bundle = Bundle()
@@ -109,12 +116,9 @@ class HomeFragment : Fragment() {
         firebaseAnalytic.logEvent("last_news_see_more_pressed", bundle)
 
         //testimonies_see_more_pressed: Al presionar la flecha "Ver más" en listado de "Testimonios"
-        //slider_retrieve_success': En caso de que el GET del slider haya sido satisfactorio
-        //slider_retrieve_error': En caso de que el GET del slider falle
-        //last_news_retrieve_success': En caso de que el GET de noticias sea satisfactorio
-        //last_news_retrieve_error': En caso de que el GET de noticias falle
-        //testimonios_retrieve_success': En caso de que el GET de testimonios sea satisfactorio
-        //testimonies_retrieve_error': En caso de que el GET de tesimonios falle
+        val bundleDos = Bundle()
+        bundle.putString("eventLog", "testimonies_see_more_pressed")
+        firebaseAnalytic.logEvent("testimonies_see_more_pressed", bundleDos)
     }
 
     /*
@@ -139,19 +143,26 @@ class HomeFragment : Fragment() {
             }
             is NewsViewState.Content -> {
                 if (viewState.content.isEmpty()) {
-                    binding.rvNews.visibility = View.GONE
+                    binding.rvNews.gone()
                 }
                 newsAdapter.setNewsData(viewState.content.subList(0, 4))
+                val bundle = Bundle()
+                bundle.putString("eventLog", "last_news_retrieve_success")
+                firebaseAnalytic.logEvent("last_news_retrieve_success", bundle)
             }
             is NewsViewState.Error -> {
-                binding.rvNews.visibility = View.GONE
+                binding.rvNews.gone()
                 // show error message and reload data
                 errorSnackBar(AppConstants.SET_MESSAGE) {
                     newsViewModel.loadNews()
                 }
+                val bundle = Bundle()
+                bundle.putString("eventLog", "last_news_retrieve_error")
+                firebaseAnalytic.logEvent("last_news_retrieve_error", bundle)
             }
         }
     }
+
     // error message snackBar
     private fun errorSnackBar(message: String, reloadData: () -> Unit) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_INDEFINITE)
@@ -165,14 +176,19 @@ class HomeFragment : Fragment() {
     Subscribe Testimonial adapter to observe viewModel LiveData
      */
     private fun subscribeTestimonialAdapter() {
-
         viewModel.testimonialsList.observe(viewLifecycleOwner, Observer { testimonial ->
-            if (testimonial != null){
-            testimonialAdapter.submitList(testimonial)
-        }
-        else{
-            Toast.makeText(context,"error al pedir los testimonios",Toast.LENGTH_SHORT).show()
-        } })
+            if (testimonial != null) {
+                testimonialAdapter.submitList(testimonial)
+                val bundle = Bundle()
+                bundle.putString("eventLog", "testimonios_retrieve_success")
+                firebaseAnalytic.logEvent("testimonios_retrieve_success", bundle)
+            } else {
+                showToast("error al pedir los testimonios")
+                val bundle = Bundle()
+                bundle.putString("eventLog", "testimonies_retrieve_error")
+                firebaseAnalytic.logEvent("testimonies_retrieve_error", bundle)
+            }
+        })
 
         viewModel.viewModelScope.launch {
             viewModel.loadTestimonials()

@@ -6,7 +6,6 @@ import retrofit2.http.POST
 
 interface PostAPIService {
 
-
     @POST("api/contacts")
     suspend fun sendContactMessageToAPI (@Body contactMessage:ContactMessageDto):Response<ContactMessageDto>
 }

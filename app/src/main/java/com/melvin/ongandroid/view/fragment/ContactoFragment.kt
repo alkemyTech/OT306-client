@@ -1,4 +1,4 @@
-package com.melvin.ongandroid.view
+package com.melvin.ongandroid.view.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -17,12 +16,13 @@ import com.melvin.ongandroid.databinding.FragmentContactBinding
 import com.melvin.ongandroid.model.ContactMessageDto
 import com.melvin.ongandroid.model.OngRemoteDataSource
 import com.melvin.ongandroid.model.OngRepository
+import com.melvin.ongandroid.utils.Extensions.showToast
 import com.melvin.ongandroid.viewmodel.ContactViewModel
 import com.melvin.ongandroid.viewmodel.ContactViewModelFactory
 
-const val TAG = "ContactFragment"
+//const val TAG = "ContactFragment"
 
-class ContactFragment : Fragment() {
+class ContactoFragment : Fragment() {
 
     private var _binding: FragmentContactBinding? = null
     private val binding get() = _binding!!
@@ -48,30 +48,27 @@ class ContactFragment : Fragment() {
 
         binding.sendMessageBtn.setOnClickListener {
             sendMessageFromContact()
-            Log.d(TAG, "sendMessageBtn On Click Listener enabled")
+            //Log.d(TAG, "sendMessageBtn On Click Listener enabled")
         }
 
         viewModel.messageFromContact.observe(viewLifecycleOwner, Observer { response ->
             if (response != null) {
                 executeAlertDialog()
-                Toast.makeText(context, "envio exitoso", Toast.LENGTH_SHORT).show()
-
-                Log.d("Main", response.message.toString())
-                Log.d("Main", response.email.toString())
-                Log.d("Main", response.nameAndLastName.toString())
+                showToast("envio exitoso")
+                //Log.d("Main", response.message.toString())
+                //Log.d("Main", response.email.toString())
+               // Log.d("Main", response.nameAndLastName.toString())
             } else {
-                Toast.makeText(context, "error en el envio", Toast.LENGTH_SHORT).show()
+                showToast("error en el envio")
             }
-// le da visibilidad al progress bar
+            // le da visibilidad al progress bar
             viewModel.isLoading.observe(viewLifecycleOwner, Observer {
                 binding.contactProgressBar.isVisible = it
             })
 
 
         })
-
         setupEditText()
-
     }
 
     /*
@@ -81,8 +78,8 @@ class ContactFragment : Fragment() {
     private fun subscribeSendMessageBtn() {
         viewModel.isValidInput.observe(viewLifecycleOwner) {
             binding.sendMessageBtn.isEnabled = viewModel.isValidInput.value ?: false
-            Log.d(TAG, "isValidInput LiveData ${viewModel.isValidInput.value}")
-            Log.d(TAG, "sendMessageButton isEnabled ${binding.sendMessageBtn.isEnabled}")
+            //Log.d(TAG, "isValidInput LiveData ${viewModel.isValidInput.value}")
+            //Log.d(TAG, "sendMessageButton isEnabled ${binding.sendMessageBtn.isEnabled}")
         }
     }
 

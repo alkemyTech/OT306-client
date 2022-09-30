@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.melvin.ongandroid.view.HomeFragment"
+        android:name="com.melvin.ongandroid.view.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
@@ -16,8 +16,8 @@
         android:label="fragment_novedades"
         tools:layout="@layout/fragment_novedades" />
     <fragment
-        android:id="@+id/contactFragment"
-        android:name="com.melvin.ongandroid.view.ContactFragment"
+        android:id="@+id/contactoFragment"
+        android:name="com.melvin.ongandroid.view.fragment.ContactoFragment"
         android:label="fragment_contact"
         tools:layout="@layout/fragment_contact" />
     <fragment

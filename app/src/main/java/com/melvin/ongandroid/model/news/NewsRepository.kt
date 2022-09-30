@@ -6,6 +6,6 @@ import kotlinx.coroutines.withContext
 class NewsRepository(private val newsApi: NewsService) {
     suspend fun getNews(): NewsResponse =
         withContext(Dispatchers.IO) {
-            newsApi.getNews()
+            newsApi.getNews().body() ?: NewsResponse()
         }
 }

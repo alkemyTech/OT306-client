@@ -67,7 +67,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$activity_version"
 
     // Fragment
-    def fragment_version = "1.5.2"
+    def fragment_version = "1.5.3"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     // Firebase

@@ -67,7 +67,7 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
                     if (resultState.data == null) {
                         showErrorSnackBar()
                     } else {
-                        val membersList = (resultState.data as? List<MemberDto?>) ?: emptyList()
+                        val membersList = (resultState.data as? List<MemberDto>) ?: emptyList()
                         if (membersList.isNotEmpty()) setMembersAdapter(membersList) else showErrorSnackBar()
                     }
                 }
@@ -97,10 +97,10 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
      * Call it when the members list is retrieve successfully
      * Set list to adapter for Members Recycler View
      */
-    private fun setMembersAdapter(members: List<MemberDto?>){
+    private fun setMembersAdapter(members: List<MemberDto>){
         Log.d(TAG, "Data successfully retrieved")
         setLoadingSpinner(false)
-        binding.membersRV.adapter = MembersAdapter(members)
+        binding.membersRV.adapter = MembersAdapter(members,this)
     }
 
     /*
