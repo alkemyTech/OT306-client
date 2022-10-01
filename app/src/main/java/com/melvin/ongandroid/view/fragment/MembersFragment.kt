@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.melvin.ongandroid.databinding.FragmentMembersBinding
 import com.melvin.ongandroid.model.nosotrosActivities.model.MemberDto
 import com.melvin.ongandroid.utils.Extensions
@@ -27,6 +27,7 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
 
     private var _binding: FragmentMembersBinding? = null
     private val binding get() = _binding!!
+    private lateinit var firebaseAnalytic: FirebaseAnalytics
     private lateinit var membersAdapter: MembersAdapter
     private lateinit var loadingSpinner: LoadingSpinner
 
@@ -45,6 +46,7 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
         super.onViewCreated(view, savedInstanceState)
 
         loadingSpinner = LoadingSpinner()
+        firebaseAnalytic = FirebaseAnalytics.getInstance(requireContext())
 
         val manager = MembersAdapter(listOf(), this)
         binding.membersRV.layoutManager = GridLayoutManager(context, 2)
@@ -79,6 +81,13 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
         })
     }
 
+    private fun logEventMenber(){
+        //En caso que el GET de miembros falle
+        val bundle = Bundle()
+        bundle.putString("eventLog","members_retrieve_error")
+        firebaseAnalytic.logEvent("members_retrieve_error", bundle)
+    }
+
     /*
      * Call with isLoading = true if Result State is Loading. Function will start the animation.
      * Call with isLoading = false if Result State isn´t Loading. Function will stop the animation
@@ -97,10 +106,14 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
      * Call it when the members list is retrieve successfully
      * Set list to adapter for Members Recycler View
      */
-    private fun setMembersAdapter(members: List<MemberDto>){
+    private fun setMembersAdapter(members: List<MemberDto>) {
         Log.d(TAG, "Data successfully retrieved")
         setLoadingSpinner(false)
-        binding.membersRV.adapter = MembersAdapter(members,this)
+        binding.membersRV.adapter = MembersAdapter(members, this)
+        //En caso que el GET de miembros sea satisfactorio
+        val bundle = Bundle()
+        bundle.putString("eventLog","members_retrieve_success")
+        firebaseAnalytic.logEvent("members_retrieve_success", bundle)
     }
 
     /*
@@ -121,6 +134,10 @@ class MembersFragment : Fragment(), MembersAdapter.OnMembersClicked {
         // navigate to detail member fragment
         val action = MembersFragmentDirections.actionMembersFragmentToDetailFragment()
         findNavController().navigate(action)
+        //En caso de que se seleccione un miembro
+        val bundle = Bundle()
+        bundle.putString("eventLog","member_pressed")
+        firebaseAnalytic.logEvent("member_pressed", bundle)
     }
 
 }

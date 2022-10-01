@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -59,26 +59,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <!-- Name and SourName Text Input Layout -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_text_layout_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_name"
-                android:layout_marginVertical="@dimen/vertical_margin_small"
-                app:layout_constraintBottom_toTopOf="@+id/input_text_layout_email"
-                app:layout_constraintStart_toStartOf="parent"
-                style="@style/InputTextLayoutStyle.App.Login">
-
-                <!-- Name and SourName Input Edit Text -->
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_text_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/text_style_login_input" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- Email Text Input Layout -->
             <!-- Change style to "@style/InputTextLayoutStyle.App.LoginError" -->
             <!-- when have an input error -->
@@ -89,7 +69,7 @@
                 android:layout_marginVertical="@dimen/vertical_margin_small"
                 android:hint="@string/hint_email"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_text_layout_name"
+                app:layout_constraintTop_toTopOf="parent"
                 style="@style/InputTextLayoutStyle.App.Login">
 
                 <!-- Email Input Edit Text -->
@@ -123,25 +103,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Repeat Password Text Input Layout -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_text_layout_repeat_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/vertical_margin_small"
-                android:hint="@string/hint_repeat_password"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_text_layout_password"
-                style="@style/InputTextLayoutStyle.App.Login">
-
-                <!-- Repeat Password Input Edit Text -->
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_text_repeat_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/text_style_login_input" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Login Button -->
             <com.google.android.material.button.MaterialButton
@@ -149,13 +110,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_values"
-                android:text="@string/button_register"
+                android:text="@string/button_login"
                 android:textAlignment="center"
                 android:padding="@dimen/margin_values"
                 style="@style/ButtonStyle.App.LoginButton"
                 android:textAppearance="@style/text_style_red_button"
                 app:layout_constraintBottom_toBottomOf="@id/text_account"
-                app:layout_constraintTop_toBottomOf="@id/input_text_layout_repeat_password" />
+                app:layout_constraintTop_toBottomOf="@id/input_text_layout_password" />
 
             <!-- Account Text View -->
             <androidx.appcompat.widget.AppCompatTextView
@@ -172,4 +133,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
